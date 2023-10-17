@@ -7,5 +7,5 @@ import Coding.rentACar.entities.concretes.Brand;
 
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Integer> {
-
+    boolean existsByName(String name);
 }

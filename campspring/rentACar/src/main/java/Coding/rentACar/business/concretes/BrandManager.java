@@ -11,6 +11,7 @@ import Coding.rentACar.business.requests.CreateBrandRequest;
 import Coding.rentACar.business.requests.UpdateBrandRequest;
 import Coding.rentACar.business.responses.GetAllBrandsResponse;
 import Coding.rentACar.business.responses.GetByIdBrandResponse;
+import Coding.rentACar.business.rules.BrandBusinessRules;
 import Coding.rentACar.core.utilities.mappers.ModelMapperService;
 import Coding.rentACar.dataAccess.abstracts.BrandRepository;
 import Coding.rentACar.entities.concretes.Brand;
@@ -22,6 +23,7 @@ public class BrandManager implements BrandService {
 
     private BrandRepository brandRepository;
     private ModelMapperService modelMapperService;
+    private BrandBusinessRules brandBusinessRules;
 
     @Override
     public List<GetAllBrandsResponse> getAll() {
@@ -38,9 +40,16 @@ public class BrandManager implements BrandService {
 
     @Override
     public void add(CreateBrandRequest createBrandRequest) {
-        Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
+
+        this.brandBusinessRules.checkIfBrandNameExists(createBrandRequest.getName());
+
+        Brand brand = this.modelMapperService.forRequest().map(createBrandRequest,
+                Brand.class);
 
         this.brandRepository.save(brand);
+        // Brand brand = new Brand();
+        // brand.setName(createBrandRequest.getName());
+        // this.brandRepository.save(brand);
     }
 
     @Override
@@ -52,7 +61,8 @@ public class BrandManager implements BrandService {
 
     @Override
     public void update(UpdateBrandRequest updateBrandRequest) {
-        Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
+        Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest,
+                Brand.class);
         this.brandRepository.save(brand);
     }
 
